@@ -1,23 +1,13 @@
-# 1. Base image
-FROM node:18-alpine
+FROM python:3.11-slim
 
-# 2. Set working directory inside container
 WORKDIR /app
 
-# 3. Copy package files first (better caching)
-COPY package*.json ./
+# Copy requirements first for better caching
+COPY requirements.txt .
 
-# 4. Install dependencies
-RUN npm install --production
+RUN pip install --no-cache-dir -r requirements.txt
 
-# 5. Copy the rest of the project files
+# Copy the rest of your code
 COPY . .
 
-# 6. Build step (if your project has one)
-RUN npm run build
-
-# 7. Expose port (adjust if your app uses a different one)
-EXPOSE 3000
-
-# 8. Default command to start the app
-CMD ["npm", "start"]
+CMD ["python", "main.py"]
